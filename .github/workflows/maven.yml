@@ -168,7 +168,7 @@ jobs:
   deployment_production:
     name: Deployment Production
     runs-on: ubuntu-latest
-    needs: deployment_uat
+    needs: prepare-prod-deployment
     environment: PROD
     steps:
       - name: deploy
