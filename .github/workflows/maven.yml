@@ -112,7 +112,7 @@ jobs:
   post_implementation_uat:
     name: Post Implementation UAT
     runs-on: ubuntu-latest
-    needs: deployment_production
+    needs: deployment_uat
     steps:
       - name: ServiceNow Get Change
         uses: ServiceNow/servicenow-devops-get-change@v2.0.0
@@ -136,7 +136,7 @@ jobs:
           
   prepare-prod-deployment:
       name: Prepare-PROD-Deployment
-      needs: deployment_uat
+      needs: post_implementation_uat
       runs-on: ubuntu-latest
       steps: 
       - name: ServiceNow Register Package
