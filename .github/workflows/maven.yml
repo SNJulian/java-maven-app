@@ -32,6 +32,8 @@ jobs:
       run: mvn -B package --file pom.xml
     - name: Unit Tests
       run: mvn test
+    - name: Show tests
+      run: ll | ll target
 
     # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
     #- name: Update dependency graph
