@@ -35,7 +35,10 @@ jobs:
     - name: Show tests
       run: less target/surefire-reports/TEST-com.mycompany.app.AppTest.xml
     - name: Run SonarQube Analysis
-      run: mvn sonar:sonar -s conf/settings.xml
+      env: 
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+      run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=SNJulian_java-maven-app_AYnPVPa1wtiHddZc5NcE
 
     # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
     #- name: Update dependency graph
