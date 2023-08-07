@@ -67,6 +67,12 @@ jobs:
 #        job-name: 'Build'
 #        sonar-host-url: ${{ secrets.SONAR_HOST_URL }}
 #        sonar-project-key: ${{ secrets.SONAR_PROJECT_KEY }}
+
+#  prepare-uat-deployment:
+#      name: Prepare-UAT-Deployment
+#      needs: build
+#      runs-on: ubuntu-latest
+#      steps: 
 #    - name: ServiceNow Register Package
 #      uses: ServiceNow/servicenow-devops-register-package@v2.0.0
 #      with:
@@ -77,11 +83,6 @@ jobs:
 #        job-name: 'build'
 #        artifacts: '[{"name": "com.maven.app","version": "1.${{ github.run_number }}","semanticVersion": "1.0.${{ github.run_number }}","repositoryName": "${{ github.repository }}"}]'
 #        package-name: 'maven-app.war'
-#  prepare-uat-deployment:
-#      name: Prepare-UAT-Deployment
-#      needs: build
-#      runs-on: ubuntu-latest
-#      steps:     
 #        - name: ServiceNow Change
 #          uses: ServiceNow/servicenow-devops-change@v2.0.0
 #          with:
@@ -131,13 +132,23 @@ jobs:
 #          tool-id: ${{ secrets.SN_ORCHESTRATION_TOOL_ID }}
 #          instance-url: ${{ secrets.SN_INSTANCE_URL }}
 #          context-github: ${{ toJSON(github) }}
-#          change-request-details: '{"state":"3","close_code":"successful", "close_notes":"Closing during Github Actions CustomActionUpdate","short_description": "Test description in Updated by Github custom Action","description":"Automated Software Deployment."}'
+#          change-request-details: '{"state":"3","close_code":"successful", "close_notes":"Deployment to PROD was successful"}'
           
 #  prepare-prod-deployment:
 #      name: Prepare-PROD-Deployment
 #      needs: deployment_uat
 #      runs-on: ubuntu-latest
-#      steps:     
+#      steps: 
+#    - name: ServiceNow Register Package
+#      uses: ServiceNow/servicenow-devops-register-package@v2.0.0
+#      with:
+#        devops-integration-token: ${{ secrets.SN_DEVOPS_INTEGRATION_TOKEN }}
+#        instance-url: ${{ secrets.SN_INSTANCE_URL }}
+#        tool-id: ${{ secrets.SN_ORCHESTRATION_TOOL_ID }}
+#        context-github: ${{ toJSON(github) }}
+#        job-name: 'build'
+#        artifacts: '[{"name": "com.maven.app","version": "1.${{ github.run_number }}","semanticVersion": "1.0.${{ github.run_number }}","repositoryName": "${{ github.repository }}"}]'
+#        package-name: 'maven-app.war'
 #        - name: ServiceNow Change
 #          uses: ServiceNow/servicenow-devops-change@v2.0.0
 #          with:
@@ -176,7 +187,7 @@ jobs:
 #          tool-id: ${{ secrets.SN_ORCHESTRATION_TOOL_ID }}
 #          context-github: ${{ toJSON(github) }}
 #          job-name: 'Post Implementation PROD'
-#          change-details: '{"build_number":"","pipeline_name":"","stage_name":"Create_Change"}'
+#          change-details: '{"build_number":"","pipeline_name":"","stage_name":"Prepare-PROD-Deployment"}'
 #      - name: Servicenow Update Change Details
 #        uses: ServiceNow/servicenow-devops-update-change@v2.0
 #        id: update
@@ -186,4 +197,4 @@ jobs:
 #          tool-id: ${{ secrets.SN_ORCHESTRATION_TOOL_ID }}
 #          instance-url: ${{ secrets.SN_INSTANCE_URL }}
 #          context-github: ${{ toJSON(github) }}
-#          change-request-details: '{"state":"3","close_code":"successful", "close_notes":"Closing during Github Actions CustomActionUpdate","short_description": "Test description in Updated by Github custom Action","description":"Automated Software Deployment."}'
+#          change-request-details: '{"state":"3","close_code":"successful", "close_notes":"Deployment to PROD was successful"}'
