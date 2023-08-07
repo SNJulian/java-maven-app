@@ -80,7 +80,7 @@ jobs:
         instance-url: ${{ secrets.SN_INSTANCE_URL }}
         tool-id: ${{ secrets.SN_ORCHESTRATION_TOOL_ID }}
         context-github: ${{ toJSON(github) }}
-        job-name: 'build'
+        job-name: 'Prepare-PROD-Deployment'
         artifacts: '[{"name": "com.maven.app","version": "1.${{ github.run_number }}","semanticVersion": "1.0.${{ github.run_number }}","repositoryName": "${{ github.repository }}"}]'
         package-name: 'maven-app.war'
     - name: ServiceNow Change
@@ -109,61 +109,61 @@ jobs:
         run: echo "deployment to UAT"
 
 
-#  post_implementation_uat:
-#    name: Post Implementation UAT
-#    runs-on: ubuntu-latest
-#    needs: deployment_production
-#    steps:
-#      - name: ServiceNow Get Change
-#        uses: ServiceNow/servicenow-devops-get-change@v2.0.0
-#        with:
-#          devops-integration-token: ${{ secrets.SN_DEVOPS_INTEGRATION_TOKEN }}
-#          instance-url: ${{ secrets.SN_INSTANCE_URL }}
-#          tool-id: ${{ secrets.SN_ORCHESTRATION_TOOL_ID }}
-#          context-github: ${{ toJSON(github) }}
-#          job-name: 'Post Implementation'
-#          change-details: '{"build_number":"","pipeline_name":"","stage_name":"Create_Change"}'
-#      - name: Servicenow Update Change Details
-#        uses: ServiceNow/servicenow-devops-update-change@v2.0
-#        id: update
-#        with:
-#          change-request-number: 'CHG0030004'
-#          devops-integration-token: ${{ secrets.SN_DEVOPS_INTEGRATION_TOKEN }}
-#          tool-id: ${{ secrets.SN_ORCHESTRATION_TOOL_ID }}
-#          instance-url: ${{ secrets.SN_INSTANCE_URL }}
-#          context-github: ${{ toJSON(github) }}
-#          change-request-details: '{"state":"3","close_code":"successful", "close_notes":"Deployment to PROD was successful"}'
+  post_implementation_uat:
+    name: Post Implementation UAT
+    runs-on: ubuntu-latest
+    needs: deployment_production
+    steps:
+      - name: ServiceNow Get Change
+        uses: ServiceNow/servicenow-devops-get-change@v2.0.0
+        with:
+          devops-integration-token: ${{ secrets.SN_DEVOPS_INTEGRATION_TOKEN }}
+          instance-url: ${{ secrets.SN_INSTANCE_URL }}
+          tool-id: ${{ secrets.SN_ORCHESTRATION_TOOL_ID }}
+          context-github: ${{ toJSON(github) }}
+          job-name: 'Post Implementation'
+          change-details: '{"build_number":"","pipeline_name":"","stage_name":"Prepare-UAT-Deployment"}'
+      - name: Servicenow Update Change Details
+        uses: ServiceNow/servicenow-devops-update-change@v2.0
+        id: update
+        with:
+          change-request-number: '${{needs.custom_action_get_change.outputs.changeRequestNumber}}'
+          devops-integration-token: ${{ secrets.SN_DEVOPS_INTEGRATION_TOKEN }}
+          tool-id: ${{ secrets.SN_ORCHESTRATION_TOOL_ID }}
+          instance-url: ${{ secrets.SN_INSTANCE_URL }}
+          context-github: ${{ toJSON(github) }}
+          change-request-details: '{"state":"3","close_code":"successful", "close_notes":"Deployment to PROD was successful"}'
           
-#  prepare-prod-deployment:
-#      name: Prepare-PROD-Deployment
-#      needs: deployment_uat
-#      runs-on: ubuntu-latest
-#      steps: 
-#    - name: ServiceNow Register Package
-#      uses: ServiceNow/servicenow-devops-register-package@v2.0.0
-#      with:
-#        devops-integration-token: ${{ secrets.SN_DEVOPS_INTEGRATION_TOKEN }}
-#        instance-url: ${{ secrets.SN_INSTANCE_URL }}
-#        tool-id: ${{ secrets.SN_ORCHESTRATION_TOOL_ID }}
-#        context-github: ${{ toJSON(github) }}
-#        job-name: 'build'
-#        artifacts: '[{"name": "com.maven.app","version": "1.${{ github.run_number }}","semanticVersion": "1.0.${{ github.run_number }}","repositoryName": "${{ github.repository }}"}]'
-#        package-name: 'maven-app.war'
-#        - name: ServiceNow Change
-#          uses: ServiceNow/servicenow-devops-change@v2.0.0
-#          with:
-#            devops-integration-token: ${{ secrets.SN_DEVOPS_INTEGRATION_TOKEN }}
-#            instance-url: ${{ secrets.SN_INSTANCE_URL }}
-#            tool-id: ${{ secrets.SN_ORCHESTRATION_TOOL_ID }}
-#            context-github: ${{ toJSON(github) }}
-#            job-name: 'Prepare-PROD-Deployment'
-#            change-request: '{"setCloseCode":"true","attributes":{"short_description":"Automated Software Deployment","description":"Automated Software Deployment.","implementation_plan":"Software update is tested and results can be found in Test Summaries Tab; When the change is approved the implementation happens automated by the CICD pipeline within the change planned start and end time window.","backout_plan":"When software fails in production, the previous software release will be re-deployed.","test_plan":"Testing if the software was successfully deployed"}}'
-#            interval: '30'
-#            timeout: '3600'
-#            changeCreationTimeOut: '3600'
-#            abortOnChangeCreationFailure: true
-#            abortOnChangeStepTimeout: true
-#            deployment-gate: '{"environment":"PROD","jobName":"Deployment Production"}'
+  prepare-prod-deployment:
+      name: Prepare-PROD-Deployment
+      needs: deployment_uat
+      runs-on: ubuntu-latest
+      steps: 
+      - name: ServiceNow Register Package
+        uses: ServiceNow/servicenow-devops-register-package@v2.0.0
+        with:
+          devops-integration-token: ${{ secrets.SN_DEVOPS_INTEGRATION_TOKEN }}
+          instance-url: ${{ secrets.SN_INSTANCE_URL }}
+          tool-id: ${{ secrets.SN_ORCHESTRATION_TOOL_ID }}
+          context-github: ${{ toJSON(github) }}
+          job-name: 'Prepare-PROD-Deployment'
+          artifacts: '[{"name": "com.maven.app","version": "1.${{ github.run_number }}","semanticVersion": "1.0.${{ github.run_number }}","repositoryName": "${{ github.repository }}"}]'
+          package-name: 'maven-app.war'
+      - name: ServiceNow Change
+        uses: ServiceNow/servicenow-devops-change@v2.0.0
+        with:
+          devops-integration-token: ${{ secrets.SN_DEVOPS_INTEGRATION_TOKEN }}
+          instance-url: ${{ secrets.SN_INSTANCE_URL }}
+          tool-id: ${{ secrets.SN_ORCHESTRATION_TOOL_ID }}
+          context-github: ${{ toJSON(github) }}
+          job-name: 'Prepare-PROD-Deployment'
+          change-request: '{"setCloseCode":"true","attributes":{"short_description":"Automated Software Deployment","description":"Automated Software Deployment.","implementation_plan":"Software update is tested and results can be found in Test Summaries Tab; When the change is approved the implementation happens automated by the CICD pipeline within the change planned start and end time window.","backout_plan":"When software fails in production, the previous software release will be re-deployed.","test_plan":"Testing if the software was successfully deployed"}}'
+          interval: '30'
+          timeout: '3600'
+          changeCreationTimeOut: '3600'
+          abortOnChangeCreationFailure: true
+          abortOnChangeStepTimeout: true
+          deployment-gate: '{"environment":"PROD","jobName":"Deployment Production"}'
 
   deployment_production:
     name: Deployment Production
