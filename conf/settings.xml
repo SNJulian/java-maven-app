@@ -11,9 +11,12 @@
             <properties>
                 <!-- Optional URL to server. Default value is http://localhost:9000 -->
                 <sonar.host.url>
-                  http://my-js-sonar.westeurope.azurecontainer.io:9000
+                    http://my-js-sonar.westeurope.azurecontainer.io:9000
                 </sonar.host.url>
+                <sonar.login>
+                    ${{ secrets.SONAR_TOKEN }}
+                </sonar.login>
             </properties>
         </profile>
-     </profiles>
+    </profiles>
 </settings>
