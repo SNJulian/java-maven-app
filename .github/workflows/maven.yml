@@ -33,7 +33,7 @@ jobs:
     - name: Unit Tests
       run: mvn test
     - name: Show tests
-      run: ls target/surefire-reports
+      run: less target/surefire-reports/TEST-com.mycompany.app.AppTest.xml
 
     # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
     #- name: Update dependency graph
