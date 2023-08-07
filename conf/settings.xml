@@ -14,6 +14,9 @@
                     http://my-js-sonar.westeurope.azurecontainer.io:9000
                 </sonar.host.url>
                 <sonar.login>
+                    ${{ secrets.SONAR_USER }}
+                </sonar.login>
+                <sonar.password>
                     ${{ secrets.SONAR_TOKEN }}
                 </sonar.login>
             </properties>
