@@ -18,7 +18,7 @@
                 </sonar.login>
                 <sonar.password>
                     ${{ secrets.SONAR_TOKEN }}
-                </sonar.login>
+                </sonar.password>
             </properties>
         </profile>
     </profiles>
