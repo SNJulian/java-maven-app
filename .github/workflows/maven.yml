@@ -30,16 +30,74 @@ jobs:
         cache: maven
     - name: Build with Maven
       run: mvn -B package --file pom.xml
+#    - name: ServiceNow Register Artifact
+#      uses: ServiceNow/servicenow-devops-register-artifact@v2.0.0
+#      with:
+#        devops-integration-token: ${{ secrets.SN_DEVOPS_INTEGRATION_TOKEN }}
+#        instance-url: ${{ secrets.SN_INSTANCE_URL }}
+#        tool-id: ${{ secrets.SN_ORCHESTRATION_TOOL_ID }}
+#        context-github: ${{ toJSON(github) }}
+#        job-name: 'build'
+#        artifacts: '[{"name": "com.maven.app","version": "1.${{ github.run_number }}","semanticVersion": "1.0.${{ github.run_number }}","repositoryName": "${{ github.repository }}"}]'
     - name: Unit Tests
       run: mvn test
     - name: Show tests
       run: less target/surefire-reports/TEST-com.mycompany.app.AppTest.xml
+#    - name: ServiceNow DevOps Unit Test Results
+#      uses: ServiceNow/servicenow-devops-test-report@v2.0.0
+#      with:
+#        devops-integration-token: ${{ secrets.SN_DEVOPS_INTEGRATION_TOKEN }}
+#        instance-url: ${{ secrets.SN_INSTANCE_URL }}
+#        tool-id: ${{ secrets.SN_ORCHESTRATION_TOOL_ID }}
+#        context-github: ${{ toJSON(github) }}
+#        job-name: 'Build'
+#        xml-report-filename: target/surefire-reports/TEST-com.mycompany.app.AppTest.xml
     - name: Run SonarQube Analysis
       env: 
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-      run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=SNJulian_java-maven-app_AYnPVPa1wtiHddZc5NcE
-
+      run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }}
+#    - name: ServiceNow DevOps Sonar Scan Results
+#      uses: ServiceNow/servicenow-devops-sonar@v2.0.0
+#      with:
+#        devops-integration-token: ${{ secrets.SN_DEVOPS_INTEGRATION_TOKEN}}
+#        instance-url: ${{ secrets.SN_INSTANCE_URL }}
+#        tool-id: ${{ secrets.SN_ORCHESTRATION_TOOL_ID }}
+#        context-github: ${{ toJSON(github) }}
+#        job-name: 'Build'
+#        sonar-host-url: ${{ secrets.SONAR_HOST_URL }}
+#        sonar-project-key: ${{ secrets.SONAR_PROJECT_KEY }}
+#    - name: ServiceNow Register Package
+#      uses: ServiceNow/servicenow-devops-register-package@v2.0.0
+#      with:
+#        devops-integration-token: ${{ secrets.SN_DEVOPS_INTEGRATION_TOKEN }}
+#        instance-url: ${{ secrets.SN_INSTANCE_URL }}
+#        tool-id: ${{ secrets.SN_ORCHESTRATION_TOOL_ID }}
+#        context-github: ${{ toJSON(github) }}
+#        job-name: 'build'
+#        artifacts: '[{"name": "com.maven.app","version": "1.${{ github.run_number }}","semanticVersion": "1.0.${{ github.run_number }}","repositoryName": "${{ github.repository }}"}]'
+#        package-name: 'maven-app.war'
+#  prepare-uat-deployment:
+#      name: Prepare-UAT-Deployment
+#      needs: build
+#      runs-on: ubuntu-latest
+#      steps:     
+#        - name: ServiceNow Change
+#          uses: ServiceNow/servicenow-devops-change@v2.0.0
+#          with:
+#            devops-integration-token: ${{ secrets.SN_DEVOPS_INTEGRATION_TOKEN }}
+#            instance-url: ${{ secrets.SN_INSTANCE_URL }}
+#            tool-id: ${{ secrets.SN_ORCHESTRATION_TOOL_ID }}
+#            context-github: ${{ toJSON(github) }}
+#            job-name: 'Prepare-UAT-Deployment'
+#            change-request: '{"setCloseCode":"true","attributes":{"short_description":"Automated Software Deployment","description":"Automated Software Deployment.","implementation_plan":"Software update is tested and results can be found in Test Summaries Tab; When the change is approved the implementation happens automated by the CICD pipeline within the change planned start and end time window.","backout_plan":"When software fails in production, the previous software release will be re-deployed.","test_plan":"Testing if the software was successfully deployed"}}'
+#            interval: '30'
+#            timeout: '3600'
+#            changeCreationTimeOut: '3600'
+#            abortOnChangeCreationFailure: true
+#            abortOnChangeStepTimeout: true
+#            deployment-gate: '{"environment":"UAT","jobName":"Deployment UAT"}'
+            
   deployment_uat:
     name: Deployment UAT
     runs-on: ubuntu-latest
@@ -48,6 +106,27 @@ jobs:
     steps:
       - name: deploy
         run: echo "deployment to UAT"
+
+#  prepare-prod-deployment:
+#      name: Prepare-PROD-Deployment
+#      needs: deployment_uat
+#      runs-on: ubuntu-latest
+#      steps:     
+#        - name: ServiceNow Change
+#          uses: ServiceNow/servicenow-devops-change@v2.0.0
+#          with:
+#            devops-integration-token: ${{ secrets.SN_DEVOPS_INTEGRATION_TOKEN }}
+#            instance-url: ${{ secrets.SN_INSTANCE_URL }}
+#            tool-id: ${{ secrets.SN_ORCHESTRATION_TOOL_ID }}
+#            context-github: ${{ toJSON(github) }}
+#            job-name: 'Prepare-PROD-Deployment'
+#            change-request: '{"setCloseCode":"true","attributes":{"short_description":"Automated Software Deployment","description":"Automated Software Deployment.","implementation_plan":"Software update is tested and results can be found in Test Summaries Tab; When the change is approved the implementation happens automated by the CICD pipeline within the change planned start and end time window.","backout_plan":"When software fails in production, the previous software release will be re-deployed.","test_plan":"Testing if the software was successfully deployed"}}'
+#            interval: '30'
+#            timeout: '3600'
+#            changeCreationTimeOut: '3600'
+#            abortOnChangeCreationFailure: true
+#            abortOnChangeStepTimeout: true
+#            deployment-gate: '{"environment":"PROD","jobName":"Deployment Production"}'
 
   deployment_production:
     name: Deployment Production
