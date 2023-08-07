@@ -43,6 +43,7 @@ jobs:
   deployment_uat:
     name: Deployment UAT
     runs-on: ubuntu-latest
+    needs: build
     environment: UAT
     steps:
       - name: deploy
@@ -51,6 +52,7 @@ jobs:
   deployment_production:
     name: Deployment Production
     runs-on: ubuntu-latest
+    needs: deployment_uat
     environment: PROD
     steps:
       - name: deploy
