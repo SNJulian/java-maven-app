@@ -30,28 +30,28 @@ jobs:
         cache: maven
     - name: Build with Maven
       run: mvn -B package --file pom.xml
-#    - name: ServiceNow Register Artifact
-#      uses: ServiceNow/servicenow-devops-register-artifact@v2.0.0
-#      with:
-#        devops-integration-token: ${{ secrets.SN_DEVOPS_INTEGRATION_TOKEN }}
-#        instance-url: ${{ secrets.SN_INSTANCE_URL }}
-#        tool-id: ${{ secrets.SN_ORCHESTRATION_TOOL_ID }}
-#        context-github: ${{ toJSON(github) }}
-#        job-name: 'build'
-#        artifacts: '[{"name": "com.maven.app","version": "1.${{ github.run_number }}","semanticVersion": "1.0.${{ github.run_number }}","repositoryName": "${{ github.repository }}"}]'
+    - name: ServiceNow Register Artifact
+      uses: ServiceNow/servicenow-devops-register-artifact@v2.0.0
+      with:
+        devops-integration-token: ${{ secrets.SN_DEVOPS_INTEGRATION_TOKEN }}
+        instance-url: ${{ secrets.SN_INSTANCE_URL }}
+        tool-id: ${{ secrets.SN_ORCHESTRATION_TOOL_ID }}
+        context-github: ${{ toJSON(github) }}
+        job-name: 'build'
+        artifacts: '[{"name": "com.maven.app","version": "1.${{ github.run_number }}","semanticVersion": "1.0.${{ github.run_number }}","repositoryName": "${{ github.repository }}"}]'
     - name: Unit Tests
       run: mvn test
     - name: Show tests
       run: less target/surefire-reports/TEST-com.mycompany.app.AppTest.xml
-#    - name: ServiceNow DevOps Unit Test Results
-#      uses: ServiceNow/servicenow-devops-test-report@v2.0.0
-#      with:
-#        devops-integration-token: ${{ secrets.SN_DEVOPS_INTEGRATION_TOKEN }}
-#        instance-url: ${{ secrets.SN_INSTANCE_URL }}
-#        tool-id: ${{ secrets.SN_ORCHESTRATION_TOOL_ID }}
-#        context-github: ${{ toJSON(github) }}
-#        job-name: 'Build'
-#        xml-report-filename: target/surefire-reports/TEST-com.mycompany.app.AppTest.xml
+    - name: ServiceNow DevOps Unit Test Results
+      uses: ServiceNow/servicenow-devops-test-report@v2.0.0
+      with:
+        devops-integration-token: ${{ secrets.SN_DEVOPS_INTEGRATION_TOKEN }}
+        instance-url: ${{ secrets.SN_INSTANCE_URL }}
+        tool-id: ${{ secrets.SN_ORCHESTRATION_TOOL_ID }}
+        context-github: ${{ toJSON(github) }}
+        job-name: 'Build'
+        xml-report-filename: target/surefire-reports/TEST-com.mycompany.app.AppTest.xml
     - name: Run SonarQube Analysis
       env: 
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
