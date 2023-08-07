@@ -35,7 +35,7 @@ jobs:
     - name: Show tests
       run: less target/surefire-reports/TEST-com.mycompany.app.AppTest.xml
     - name: Run SonarQube Analysis
-      run: mvn sonar:sonar -Dsonar.token=${{ secrets.SONAR_TOKEN }}
+      run: mvn sonar:sonar -s settings.xml -Dsonar.token=${{ secrets.SONAR_TOKEN }}
 
     # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
     #- name: Update dependency graph
