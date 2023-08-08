@@ -92,7 +92,7 @@ jobs:
         tool-id: ${{ secrets.SN_ORCHESTRATION_TOOL_ID }}
         context-github: ${{ toJSON(github) }}
         job-name: 'Prepare-UAT-Deployment'
-        change-request: '{"setCloseCode":"true","attributes":{"short_description":"Automated Software Deployment","description":"Automated Software Deployment.","implementation_plan":"Software update is tested and results can be found in Test Summaries Tab; When the change is approved the implementation happens automated by the CICD pipeline within the change planned start and end time window.","backout_plan":"When software fails in production, the previous software release will be re-deployed.","test_plan":"Testing if the software was successfully deployed"}}'
+        change-request: '{"setCloseCode":"true","attributes":{"business_service":{"name":"Java Maven App_Test_1"},"short_description":"Automated Software Deployment","description":"Automated Software Deployment.","implementation_plan":"Software update is tested and results can be found in Test Summaries Tab; When the change is approved the implementation happens automated by the CICD pipeline within the change planned start and end time window.","backout_plan":"When software fails in production, the previous software release will be re-deployed.","test_plan":"Testing if the software was successfully deployed"}}'
         interval: '30'
         timeout: '3600'
         changeCreationTimeOut: '3600'
@@ -110,19 +110,19 @@ jobs:
         run: echo "deployment to UAT"
 
 
-  post_implementation_uat:
-    name: Post Implementation UAT
-    runs-on: ubuntu-latest
-    needs: deployment_uat
-    steps:
-      - name: ServiceNow Get Change
-        uses: ServiceNow/servicenow-devops-get-change@main
-        with:
-          devops-integration-token: ${{ secrets.SN_DEVOPS_INTEGRATION_TOKEN }}
-          instance-url: ${{ secrets.SN_INSTANCE_URL }}
-          tool-id: ${{ secrets.SN_ORCHESTRATION_TOOL_ID }}
-          context-github: ${{ toJSON(github) }}
-          change-details: '{"build_number":"","pipeline_name":"","stage_name":"Prepare-UAT-Deployment"}'
+#  post_implementation_uat:
+#    name: Post Implementation UAT
+#    runs-on: ubuntu-latest
+#    needs: deployment_uat
+#    steps:
+#      - name: ServiceNow Get Change
+#        uses: ServiceNow/servicenow-devops-get-change@main
+#        with:
+#          devops-integration-token: ${{ secrets.SN_DEVOPS_INTEGRATION_TOKEN }}
+#          instance-url: ${{ secrets.SN_INSTANCE_URL }}
+#          tool-id: ${{ secrets.SN_ORCHESTRATION_TOOL_ID }}
+#          context-github: ${{ toJSON(github) }}
+#          change-details: '{"build_number":"","pipeline_name":"","stage_name":"Prepare-UAT-Deployment"}'
 #      - name: Servicenow Update Change Details
 #        uses: ServiceNow/servicenow-devops-update-change@v2.0.0
 #        id: update
@@ -157,7 +157,7 @@ jobs:
           tool-id: ${{ secrets.SN_ORCHESTRATION_TOOL_ID }}
           context-github: ${{ toJSON(github) }}
           job-name: 'Prepare-PROD-Deployment'
-          change-request: '{"setCloseCode":"true","attributes":{"short_description":"Automated Software Deployment","description":"Automated Software Deployment.","implementation_plan":"Software update is tested and results can be found in Test Summaries Tab; When the change is approved the implementation happens automated by the CICD pipeline within the change planned start and end time window.","backout_plan":"When software fails in production, the previous software release will be re-deployed.","test_plan":"Testing if the software was successfully deployed"}}'
+          change-request: '{"setCloseCode":"true","attributes":{"business_service":{"name":"Java Maven App_Production_1"},"short_description":"Automated Software Deployment","description":"Automated Software Deployment.","implementation_plan":"Software update is tested and results can be found in Test Summaries Tab; When the change is approved the implementation happens automated by the CICD pipeline within the change planned start and end time window.","backout_plan":"When software fails in production, the previous software release will be re-deployed.","test_plan":"Testing if the software was successfully deployed"}}'
           interval: '30'
           timeout: '3600'
           changeCreationTimeOut: '3600'
