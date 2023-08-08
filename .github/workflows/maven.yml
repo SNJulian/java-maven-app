@@ -52,7 +52,7 @@ jobs:
         tool-id: ${{ secrets.SN_ORCHESTRATION_TOOL_ID }}
         context-github: ${{ toJSON(github) }}
         job-name: 'Build'
-        xml-report-filename: './target/surefire-reports/*.xml'
+        xml-report-filename: target/surefire-reports/TEST-com.mycompany.app.AppTest.xml
     - name: Run SonarQube Analysis
       env: 
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
