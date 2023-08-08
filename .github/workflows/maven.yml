@@ -43,7 +43,7 @@ jobs:
       run: mvn test
     - name: Show tests
       run: less target/surefire-reports/TEST-com.mycompany.app.AppTest.xml
-           #find target/surefire-reports -type f -name \"*.xml\" -exec sed -i'' -e 's/tests=\"/skipped=\"0\" tests=\"/g' {} + && rm -f target/surefire-reports/*.xml-e
+           find . -type f -name \"testResults.xml\" -exec sed -i'' -e 's/tests=\"/skipped=\"0\" tests=\"/g' {} + && rm -f testResults.xml-e
     - name: ServiceNow DevOps Unit Test Results
       uses: ServiceNow/servicenow-devops-test-report@v2.0.0
       with:
