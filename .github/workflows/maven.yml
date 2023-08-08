@@ -122,7 +122,7 @@ jobs:
           instance-url: ${{ secrets.SN_INSTANCE_URL }}
           tool-id: ${{ secrets.SN_ORCHESTRATION_TOOL_ID }}
           context-github: ${{ toJSON(github) }}
-          job-name: 'Post Implementation'
+          #job-name: 'Post Implementation'
           change-details: '{"build_number":"","pipeline_name":"","stage_name":"Prepare-UAT-Deployment"}'
       - name: Servicenow Update Change Details
         uses: ServiceNow/servicenow-devops-update-change@v2.0.0
