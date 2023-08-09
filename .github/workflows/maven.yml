@@ -139,7 +139,7 @@ jobs:
           
   prepare-prod-deployment:
       name: Prepare-PROD-Deployment
-      needs: post_implementation_uat
+      needs: deployment_uat
       runs-on: ubuntu-latest
       steps: 
       - name: ServiceNow Register Package
@@ -180,7 +180,7 @@ jobs:
   post_implementation_prod:
     name: Post Implementation PROD
     runs-on: ubuntu-latest
-    needs: deployment_uat
+    needs: deployment_prod
     outputs:
         changeRequestNumber: ${{ steps.get.outputs.change-request-number }}
     steps:
