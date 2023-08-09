@@ -180,7 +180,7 @@ jobs:
   post_implementation_prod:
     name: Post Implementation PROD
     runs-on: ubuntu-latest
-    needs: deployment_prod
+    needs: deployment_production
     outputs:
         changeRequestNumber: ${{ steps.get.outputs.change-request-number }}
     steps:
