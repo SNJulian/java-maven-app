@@ -196,7 +196,7 @@ jobs:
           instance-url: ${{ secrets.SN_INSTANCE_URL }}
           tool-id: ${{ secrets.SN_ORCHESTRATION_TOOL_ID }}
           context-github: ${{ toJSON(github) }}
-          change-details: '{"build_number":"","pipeline_name":"","stage_name":"Prepare-PROD-Deployment"}'
+          change-details: '{"build_number":"","pipeline_name":"","stage_name":"Deployment Production"}'
       - name: Servicenow Update Change Details
         uses: ServiceNow/servicenow-devops-update-change@v2.0.0
         id: updateprod
